@@ -1,0 +1,27 @@
+name: Infrastructure Security Scan
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Run Checkov Scanner
+      - name: Run Checkov Scan
+        uses: bridgecrewio/checkov-action@master
+        with:
+          framework: terraform
+          # Optional: skip specific checks globally if needed
+          # skip_check: CKV_AWS_136,CKV_AWS_51 
+
+      # Run TFSec Scanner (Now part of Trivy)
+      - name: Run TFSec Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          hide-progress: true
+          severity: 'HIGH,CRITICAL'
