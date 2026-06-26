@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "s3" {
-  bucket = "{var.environment}-{var.region}-{var.bucket_name}"
+  bucket = "${var.environment}-${var.region}-${var.bucket_name}"
    tags = {
-    Name = "{var.environment}-{var.region}-{var.bucket_name}"
+    Name = "${var.environment}-${var.region}-${var.bucket_name}"
   }
 }
 
@@ -25,10 +25,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
   }
 }
 
-resource "aws_s3_bucket_acl" "s3" {
-  bucket = aws_s3_bucket.s3.id
-  acl    = "private"
-}
 
 resource "aws_s3_bucket_policy" "deny_public_access" {
   bucket = aws_s3_bucket.s3.id
