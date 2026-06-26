@@ -29,3 +29,29 @@ resource "aws_s3_bucket_acl" "s3" {
   bucket = aws_s3_bucket.s3.id
   acl    = "private"
 }
+
+resource "aws_s3_bucket_policy" "deny_public_access" {
+  bucket = aws_s3_bucket.s3.id
+  policy = data.aws_iam_policy_document.deny_public_access.json
+}
+
+
+data "aws_iam_policy_document" "deny_public_access" {
+  statement {
+    sid       = "DenyInsecureTransport"
+    effect    = "Deny"
+    actions   = ["s3:*"]
+    resources = ["${aws_s3_bucket.s3.arn}/*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+}
