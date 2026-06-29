@@ -37,7 +37,7 @@ data "aws_iam_policy_document" "deny_public_access" {
     sid       = "DenyInsecureTransport"
     effect    = "Deny"
     actions   = ["s3:*"]
-    resources = ["${aws_s3_bucket.s3.arn}/*"]
+    resources = ["${aws_s3_bucket.s3.arn}/*", aws_s3_bucket.s3.arn]
 
     principals {
       type        = "AWS"
